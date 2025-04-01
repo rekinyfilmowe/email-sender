@@ -5,9 +5,9 @@ const app = express();
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
-  host: 'poczta.hostido.pl',
-  port: 465,
-  secure: true,
+  host: 'host998067.hostido.net.pl',
+  port: 587,
+  secure: false, // UWAGA! dla 587 musi być "false"
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
