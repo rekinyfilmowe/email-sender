@@ -15,15 +15,15 @@ const transporter = nodemailer.createTransport({
 });
 
 app.post('/send-email', async (req, res) => {
-  const { to, subject, text } = req.body;
+  const { to, subject, html } = req.body;
 
-  try {
-    await transporter.sendMail({
-      from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
-      to,
-      subject,
-      text
-    });
+try {
+  await transporter.sendMail({
+    from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
+    to,
+    subject,
+    html // <- to klucz do działania!
+  });
 
     res.send({ success: true });
   } catch (error) {
