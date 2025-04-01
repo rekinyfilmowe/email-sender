@@ -1,5 +1,5 @@
-const express = require('express');
-const nodemailer = require('nodemailer');
+import express from 'express';
+import nodemailer from 'nodemailer';
 
 const app = express();
 app.use(express.json());
