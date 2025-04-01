@@ -19,7 +19,7 @@ app.post('/send-email', async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: '"Rekiny Filmowe" <twoj@email.pl>', // <-- też dostosuj
+      from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       text
