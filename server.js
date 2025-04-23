@@ -1,8 +1,11 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
+import PQueue from 'p-queue';
 
 const app = express();
 app.use(express.json());
+
+const queue = new PQueue({ concurrency: 1 });
 
 const transporter = nodemailer.createTransport({
   host: 'host998067.hostido.net.pl',
@@ -17,20 +20,24 @@ const transporter = nodemailer.createTransport({
 app.post('/send-email', async (req, res) => {
   const { to, subject, html, attachments } = req.body;
 
-try {
-  await transporter.sendMail({
-    from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
-    to,
-    subject,
-    html,
-  attachments
-  });
+  const job = async () => {
+    return transporter.sendMail({
+      from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
+      to,
+      subject,
+      html,
+      attachments
+    });
+  };
 
-    res.send({ success: true });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send({ success: false, error: error.message });
-  }
+  queue.add(job)
+    .then(() => {
+      res.send({ success: true });
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send({ success: false, error: error.message });
+    });
 });
 
 const PORT = process.env.PORT || 3000;
