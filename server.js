@@ -69,6 +69,28 @@ app.post('/send-email', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
+
+app.get('/logs', (req, res) => {
+  const logPath = path.join('logs', 'emails.log');
+
+  fs.readFile(logPath, 'utf8', (err, data) => {
+    if (err) {
+      console.error('Błąd odczytu loga:', err.message);
+      return res.status(500).send('Nie udało się odczytać loga.');
+    }
+
+    res.set('Content-Type', 'text/plain');
+    res.send(data);
+  });
+});
+
+app.get('/queue-status', (req, res) => {
+  res.json({
+    pending: queue.pending,
+    size: queue.size
+  });
+});
+
 app.listen(PORT, () => {
   console.log(`Email sender server running on port ${PORT}`);
 });
