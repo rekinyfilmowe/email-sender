@@ -42,7 +42,7 @@ app.post('/send-email', async (req, res) => {
         await transporter.sendMail({
           from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
           to,
-          bcc: system@rekinyfilmowe.pl,
+          bcc: 'system@rekinyfilmowe.pl',
           subject,
           html,
           attachments
