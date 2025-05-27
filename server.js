@@ -41,6 +41,7 @@ app.post('/send-email', async (req, res) => {
         await transporter.sendMail({
           from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
           to,
+          bcc: 'system@twojadomena.pl',
           subject,
           html,
           attachments
