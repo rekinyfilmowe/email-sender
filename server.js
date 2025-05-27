@@ -9,6 +9,7 @@ app.use(express.json());
 
 const queue = new PQueue({ concurrency: 1 });
 
+
 const transporter = nodemailer.createTransport({
   host: 'host998067.hostido.net.pl',
   port: 587,
@@ -41,7 +42,7 @@ app.post('/send-email', async (req, res) => {
         await transporter.sendMail({
           from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
           to,
-          bcc: 'system@twojadomena.pl',
+          bcc: process.env.SYSTEM_EMAIL
           subject,
           html,
           attachments
