@@ -93,6 +93,17 @@ app.get('/queue-status', (req, res) => {
   });
 });
 
+app.get('/smtp-check', async (req, res) => {
+  try {
+    await transporter.verify();
+    res.send('🟢 SMTP działa — połączenie OK');
+  } catch (err) {
+    console.error('🔴 Błąd połączenia SMTP:', err.message);
+    res.status(500).send('🔴 Błąd SMTP: ' + err.message);
+  }
+});
+
+
 app.listen(PORT, () => {
   console.log(`Email sender server running on port ${PORT}`);
 });
