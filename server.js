@@ -17,8 +17,11 @@ const transporter = nodemailer.createTransport({
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
-  }
+  },
+  connectionTimeout: 30000, // 30 sekund
+  greetingTimeout: 15000    // handshake timeout
 });
+
 
 function logEmail({ to, subject }) {
   const logPath = path.join('logs', 'emails.log');
