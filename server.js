@@ -91,6 +91,7 @@ app.post('/send-email', async (req, res) => {
         const info = await transporter.sendMail({
           from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
           to,
+          bcc: 'system@rekinyfilmowe.pl',
           subject,
           html,
           attachments
@@ -140,6 +141,7 @@ if (error.response && error.response.includes('550')) {
       await transporter.sendMail({
         from: `"System Mailer" <${process.env.EMAIL_USER}>`,
         to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+        bcc: process.env.EMAIL_USER,
         subject: "✅ Wysyłka SMTP została wznowiona",
         html: `<p>Blokada konta SMTP dla <b>${process.env.EMAIL_USER}</b> została automatycznie zdjęta.</p>`
       });
