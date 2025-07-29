@@ -1,0 +1,31 @@
+import fs from 'fs';
+import path from 'path';
+
+const invalidEmailsPath = path.join('logs', 'invalid-emails.json');
+
+// Wczytaj czarną listę
+function loadInvalidEmails() {
+  if (!fs.existsSync(invalidEmailsPath)) return [];
+  return JSON.parse(fs.readFileSync(invalidEmailsPath, 'utf8'));
+}
+
+// Zapisz czarną listę
+function saveInvalidEmails(emails) {
+  fs.writeFileSync(invalidEmailsPath, JSON.stringify(emails, null, 2));
+}
+
+// Dodaj adres do czarnej listy
+function addInvalidEmail(email) {
+  const emails = loadInvalidEmails();
+  if (!emails.includes(email)) {
+    emails.push(email);
+    saveInvalidEmails(emails);
+    console.log(`🚫 Dodano do czarnej listy: ${email}`);
+  }
+}
+
+// Sprawdź adres przed wysyłką
+function isInvalidEmail(email) {
+  const emails = loadInvalidEmails();
+  return emails.includes(email);
+}
