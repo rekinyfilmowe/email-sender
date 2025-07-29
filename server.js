@@ -111,33 +111,47 @@ app.post('/send-email', async (req, res) => {
         }
 
         // Jeśli serwer zwrócił ogólną blokadę (550) → zatrzymaj wysyłkę
-        if (error.response && error.response.includes('550')) {
+if (error.response && error.response.includes('550')) {
   console.error("🚨 Wykryto blokadę konta (550). Wstrzymuję wysyłkę na 30 minut.");
   isBlocked = true;
 
-  // Powiadom administratora o blokadzie
+  // Wyślij powiadomienie e-mail o blokadzie
   try {
     await transporter.sendMail({
-      from: `"Mailer System" <${process.env.EMAIL_USER}>`,
-      to: process.env.ADMIN_EMAIL,
-      subject: "🚨 Blokada wysyłki e-mail (SMTP)",
-      html: `<p>Wykryto blokadę SMTP dla konta <strong>${process.env.EMAIL_USER}</strong>.</p>
+      from: `"System Mailer" <${process.env.EMAIL_USER}>`,
+      to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER, // jeżeli brak ADMIN_EMAIL, wyśle na EMAIL_USER
+      subject: "🚨 Blokada SMTP - Rekiny Filmowe",
+      html: `<p>Wykryto blokadę konta SMTP dla <b>${process.env.EMAIL_USER}</b>.</p>
              <p>Wysyłka została wstrzymana na 30 minut.</p>
-             <p>Błąd: ${error.message}</p>`
+             <p>Szczegóły błędu: ${error.message}</p>`
     });
-    console.log("📧 Powiadomienie o blokadzie wysłane do administratora.");
+    console.log("📧 Powiadomienie o blokadzie wysłane.");
   } catch (notifyError) {
     console.error("⚠️ Nie udało się wysłać powiadomienia o blokadzie:", notifyError.message);
   }
 
   if (unblockTimeout) clearTimeout(unblockTimeout);
-  unblockTimeout = setTimeout(() => {
+  unblockTimeout = setTimeout(async () => {
     isBlocked = false;
     console.log("✅ Blokada wysyłki została automatycznie zniesiona.");
+
+    // Powiadomienie o odblokowaniu
+    try {
+      await transporter.sendMail({
+        from: `"System Mailer" <${process.env.EMAIL_USER}>`,
+        to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
+        subject: "✅ Wysyłka SMTP została wznowiona",
+        html: `<p>Blokada konta SMTP dla <b>${process.env.EMAIL_USER}</b> została automatycznie zdjęta.</p>`
+      });
+      console.log("📧 Powiadomienie o odblokowaniu wysłane.");
+    } catch (notifyError) {
+      console.error("⚠️ Nie udało się wysłać powiadomienia o odblokowaniu:", notifyError.message);
+    }
   }, BLOCK_PAUSE);
 
   throw new Error("Blokada konta SMTP — pauza 30 minut.");
 }
+
 
 
         if (attempt > maxRetries) throw error;
