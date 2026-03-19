@@ -110,7 +110,7 @@ app.post('/send-email', async (req, res) => {
         try {
           const infoSys = await transporter.sendMail({
             from: `"SEQNDE" <${process.env.EMAIL_USER}>`,
-            to: process.env.ADMIN_EMAIL || 'info@seqnde.com',
+          to: 'system.rekinyfilmowe@gmail.com',
             subject: `KOPIA: ${subject}`,
             html,
             text: htmlToText(html),
