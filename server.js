@@ -76,7 +76,7 @@ app.post('/send-email', async (req, res) => {
       try {
         // ── 1) MAIL DO UŻYTKOWNIKA ────────────────────────────────────────────────
         const infoUser = await transporter.sendMail({
-          from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
+          from: `"SEQNDE" <${process.env.EMAIL_USER}>`,
           to,
           subject,
           html,
@@ -109,14 +109,14 @@ app.post('/send-email', async (req, res) => {
         // ── 2) MAIL DO SYSTEMU (best-effort) ──────────────────────────────────────
         try {
           const infoSys = await transporter.sendMail({
-            from: `"Rekiny Filmowe" <${process.env.EMAIL_USER}>`,
+            from: `"SEQNDE" <${process.env.EMAIL_USER}>`,
             to: process.env.ADMIN_EMAIL || 'info@seqnde.com',
             subject: `KOPIA: ${subject}`,
             html,
             text: htmlToText(html),
             attachments
           });
-          console.log("📋 kopia do system:", (process.env.ADMIN_EMAIL || 'system@rekinyfilmowe.pl'), 'MID:', infoSys.messageId);
+          console.log("📋 kopia do system:", (process.env.ADMIN_EMAIL || 'seqnde.com'), 'MID:', infoSys.messageId);
         } catch (e) {
           console.warn('⚠️ nie udało się wysłać kopii do system@…:', e?.message || e);
         }
@@ -144,7 +144,7 @@ app.post('/send-email', async (req, res) => {
             await transporter.sendMail({
               from: `"System Mailer" <${process.env.EMAIL_USER}>`,
               to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
-              subject: "🚨 Blokada SMTP - Rekiny Filmowe",
+              subject: "🚨 Blokada SMTP - SEQNDE",
               html: `<p>Wykryto blokadę konta SMTP dla <b>${process.env.EMAIL_USER}</b>.</p>
                      <p>Wysyłka została wstrzymana na 30 minut.</p>
                      <p>Szczegóły błędu: ${error.message}</p>`
